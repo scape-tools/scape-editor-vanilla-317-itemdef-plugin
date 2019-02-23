@@ -12,16 +12,16 @@ import scape.editor.fx.TupleCellFactory
 import scape.editor.gui.App
 import scape.editor.gui.controller.BaseController
 import scape.editor.gui.event.LoadCacheEvent
-import scape.editor.gui.event.LoadItemDefEvent
-import scape.editor.gui.event.SaveItemDefEvent
 import scape.editor.gui.model.KeyModel
 import scape.editor.gui.model.NamedValueModel
 import scape.editor.gui.model.ValueModel
 import scape.editor.gui.plugin.PluginManager
+import scape.editor.gui.plugin.extension.ConfigExtension
+import scape.editor.gui.util.FXDialogUtil
 import java.net.URL
 import java.util.*
 
-class ItemDefController : BaseController() {
+class Controller : BaseController() {
 
     @FXML
     lateinit var indexTable: TableView<KeyModel>
@@ -121,8 +121,16 @@ class ItemDefController : BaseController() {
         PluginManager.post(LoadCacheEvent(App.fs))
 
         val archive = App.fs.getArchive(RSArchive.CONFIG_ARCHIVE)
+        val plugin = this.currentPlugin
 
-        PluginManager.post(LoadItemDefEvent(currentPlugin, archive, indexes))
+        if (plugin is ConfigExtension) {
+            try {
+                plugin.onLoad(indexes, archive)
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+                FXDialogUtil.showException(ex)
+            }
+        }
     }
 
     override fun onClear() {
@@ -138,7 +146,16 @@ class ItemDefController : BaseController() {
     @FXML
     fun onSave() {
         val archive = App.fs.getArchive(RSArchive.CONFIG_ARCHIVE)
-        PluginManager.post(SaveItemDefEvent(currentPlugin, archive, indexes))
+        val plugin = this.currentPlugin
+
+        if (plugin is ConfigExtension) {
+            try {
+                plugin.onSave(indexes, archive)
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+                FXDialogUtil.showException(ex)
+            }
+        }
     }
 
 }

@@ -1,11 +1,12 @@
 package plugin;
 
 import scape.editor.fs.io.RSBuffer;
-import scape.editor.gui.plugin.Plugin;
-import scape.editor.gui.plugin.extension.config.ItemDefinitionExtension;
+import scape.editor.gui.plugin.IPlugin;
+import scape.editor.gui.plugin.PluginDescriptor;
+import scape.editor.gui.plugin.extension.ConfigExtension;
 
-@Plugin(name="Vanilla 317 Item Definition Plugin", authors = "Nshusa", version = "1.1.0")
-public class ItemDefinitionPlugin extends ItemDefinitionExtension {
+@PluginDescriptor(name="Vanilla 317 Item Definition Plugin", authors = "Nshusa", version = "2.0.0")
+public class Plugin extends ConfigExtension implements IPlugin {
 
     @Override
     public String applicationIcon() {
@@ -25,7 +26,7 @@ public class ItemDefinitionPlugin extends ItemDefinitionExtension {
     }
 
     @Override
-    protected String getFileName() {
+    public String getFileName() {
         return "obj";
     }
 
